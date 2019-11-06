@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".addPel">
 
+    <EditText
+        android:id="@+id/KOD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="134dp" />
+
+
+
+
+
+    <EditText
+        android:id="@+id/ONO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/KOD"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+       />
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ONO"
         android:text="TextView"
-        tools:layout_editor_absoluteX="63dp"
-        tools:layout_editor_absoluteY="221dp" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="63dp"
-        tools:layout_editor_absoluteY="134dp" />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="289dp" />
-
+        />
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="106dp"
+        android:layout_height="80dp"
+
+        android:layout_alignParentBottom="true"
+
         android:onClick="CREATE"
         android:text="CREATE"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="645dp" />
+       />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="146dp"
-        tools:layout_editor_absoluteY="648dp" />
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/button"
+        android:onClick="ADD_PEL"
+        android:text="Save" />
 
     <Button
         android:id="@+id/button3"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/button2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
+
         android:text="Button"
-        tools:layout_editor_absoluteX="255dp"
-        tools:layout_editor_absoluteY="645dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+       />
+</RelativeLayout>
