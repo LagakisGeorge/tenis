@@ -597,27 +597,54 @@ public class addPel extends AppCompatActivity {
                     SQLiteDatabase db = null;
                     db = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
 
-                    Cursor cursor = db.rawQuery("select IDBARDIA,CH1  from  parousies  order by CH1 desc", null);  //+ " order by CH1 desc"
+                    Cursor cursor = db.rawQuery("select IDBARDIA,CH1,CH2  from  parousies  order by CH1 desc", null);  //+ " order by CH1 desc"
 
                     // Cursor cursor = db.selectAll();
 
-                    fw.append("No");
+                    fw.append("ONOMA");
                     fw.append(',');
 
-                    fw.append("code");
+                    fw.append("CODE");
                     fw.append(',');
+
+
+                    fw.append("TIME/DATE");
+                    fw.append(',');
+
+
 
                     fw.append('\n');
 
                     if (cursor.moveToFirst()) {
                         do {
+                            //NAME
+                            fw.append(cursor.getString(2));
+                            fw.append(',');
+
+                            //ID
+                            // fw.append(Float.toString(cursor.getFloat(2)));
+                            fw.append(Float.toString(cursor.getInt(2)));
+                            fw.append(',');
+
+
+                            // DATE
                             fw.append(cursor.getString(1));
                             fw.append(',');
 
 
-                               // fw.append(Float.toString(cursor.getFloat(2)));
-                                fw.append(Float.toString(cursor.getInt(0)));
-                                fw.append(',');
+
+/*
+
+                            fw.append(cursor.getString(1));
+                            fw.append(',');
+
+
+
+
+
+
+
+
 /*
 
 
