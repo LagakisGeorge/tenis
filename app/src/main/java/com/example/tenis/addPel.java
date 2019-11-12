@@ -26,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
@@ -54,15 +55,60 @@ public class addPel extends AppCompatActivity {
 
         mKOD = (EditText) findViewById(R.id.KOD);
 
-
+        // patav ton kvdiko kai enter
         mKOD.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    adding();
+                    // adding();
+                    EditText mKOD, mONO;
+                    TextView t;
+                    mKOD = (EditText) findViewById(R.id.KOD);
+                    mONO = (EditText) findViewById(R.id.ONO);
+
+                    t = (TextView) findViewById(R.id.textView);
+                    t.setText(mONO.getText());
                     // Perform action on key press
                     Toast.makeText(addPel.this, mKOD.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                    Button update=(Button)findViewById(R.id.update);
+                    //when play is clicked show stop button and hide play button
+                    update.setVisibility(View.GONE);
+                    // stopButton.setVisibility(View.VISIBLE);
+
+                    //==========================================
+                    SQLiteDatabase mydatabase = null;
+                    mydatabase = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
+                    String cmKOD = mKOD.getText().toString();
+                    String cmONO = mONO.getText().toString();
+                    Cursor cursor = mydatabase.rawQuery("select KOD,ONO from pel where KOD=" + cmKOD + " ", null);
+                    int n = 0;
+                    String mName="";
+                    // looping through all rows and adding to list
+                    if (cursor.moveToFirst()) {
+                        do {
+                            n = cursor.getInt(0);
+                            // n = Integer.parseInt(cursor.getString(0));
+                            mName=cursor.getString(1);
+                        } while (cursor.moveToNext());
+                    }
+
+                    if (n == 0) {
+                        mONO.setText("");
+                        t.setText("δεν υπαρχει");
+                        mydatabase.close();
+                    } else {
+                        // Button update=(Button)findViewById(R.id.update);
+                        //when play is clicked show stop button and hide play button
+                        update.setVisibility(View.VISIBLE);
+
+                        mydatabase.close();
+                        t.setText(mName);
+                        mONO.setText(mName);
+                        SHOW_KINISI(n);
+                    }
+
                     return true;
                 }
                 return false;
@@ -202,11 +248,36 @@ public class addPel extends AppCompatActivity {
 */
 
 
+    public void update_pel(View view) {
+
+
+        SQLiteDatabase mydatabase = null;
+        mydatabase = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
+        EditText mKOD, mONO;
+        TextView t;
+        mKOD = (EditText) findViewById(R.id.KOD);
+        mONO = (EditText) findViewById(R.id.ONO);
+
+        t = (TextView) findViewById(R.id.textView);
+        t.setText(mONO.getText());
+
+        mydatabase.execSQL("update pel set ONO='" + mONO.getText() + "' where KOD="+mKOD.getText()+";");
+        mydatabase.close();
+
+
+
+
+
+    }
+
+
     public void ADD_PEL(View v) {
         adding();
     }
 
     public void adding() {
+
+
         SQLiteDatabase mydatabase = null;
         mydatabase = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
         EditText mKOD, mONO;
@@ -233,6 +304,8 @@ public class addPel extends AppCompatActivity {
             mydatabase.execSQL("INSERT INTO pel (KOD,ONO) VALUES(" + cmKOD + ",'" + cmONO + "');");
             mydatabase.close();
         } else {
+
+
             mydatabase.close();
             t.setText(mName);
             SHOW_KINISI(n);
@@ -247,6 +320,7 @@ public class addPel extends AppCompatActivity {
     public void SHOW_KINISI(int kod ){
          int n=0;
 
+        values=new ArrayList<>();  // μηδενιζω την λιστα
         try{
             SQLiteDatabase mydatabase = null;
             mydatabase = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
@@ -577,125 +651,6 @@ public class addPel extends AppCompatActivity {
 
 
 
-  public void csvtosd(View view){
-      try {
-
-          exportEmailInCSV();  // etc.
-
-      } catch (IOException e) {
-          // handle the exception
-      }
-
-
-  }
-
-    public void exportEmailInCSV() throws IOException {
-        {
-
-            File folder = new File(Environment.getExternalStorageDirectory()
-                    + "/Folder");
-
-            boolean var = false;
-            if (!folder.exists())
-                var = folder.mkdir();
-
-            System.out.println("" + var);
-
-
-            final String filename = folder.toString() + "/" + "Test.csv";
-
-            // show waiting screen
-            CharSequence contentTitle = getString(R.string.app_name);
-            final ProgressDialog progDailog = ProgressDialog.show(
-                    addPel.this, contentTitle, "even geduld aub...",
-                    true);//please wait
-            @SuppressLint("HandlerLeak") final Handler handler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                }
-            };
-
-            new Thread() {
-                public void run() {
-                    try {
-
-                        FileWriter fw = new FileWriter(filename);
-                        SQLiteDatabase db = null;
-                        db = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
-
-                        Cursor cursor = db.rawQuery("select IDBARDIA,CH1  from  parousies where IDBARDIA=1 order by CH1 desc", null);  //+ " order by CH1 desc"
-
-                       // Cursor cursor = db.selectAll();
-
-
-
-
-                        fw.append("Kwaliteit");
-                        fw.append(',');
-
-                        fw.append("asd");
-                        fw.append(',');
-
-                        fw.append('\n');
-
-                        if (cursor.moveToFirst()) {
-                            do {
-                                fw.append(cursor.getString(0));
-                                fw.append(',');
-
-                             /*
-                                fw.append(cursor.getString(1));
-
-                                fw.append(',');
-
-                                fw.append(cursor.getString(2));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(3));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(4));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(5));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(6));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(7));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(8));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(9));
-                                fw.append(',');
-
-                                fw.append(cursor.getString(10));
-                                fw.append(',');
-                             */
-                                fw.append('\n');
-
-                            } while (cursor.moveToNext());
-                        }
-                        if (cursor != null && !cursor.isClosed()) {
-                            cursor.close();
-                        }
-
-                        // fw.flush();
-                        fw.close();
-
-                    } catch (Exception e) {
-                    }
-                    handler.sendEmptyMessage(0);
-                    progDailog.dismiss();
-                }
-            }.start();
-
-        }
-
-    }
 
 
 
