@@ -1,6 +1,8 @@
 package com.example.tenis;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -10,10 +12,16 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public static   String DBname;
@@ -42,16 +50,138 @@ public class MainActivity extends AppCompatActivity {
                // intent.putExtra("mKATHG", KATHG); // ΣΤΕΛΝΩ ΤΟΝ ΠΙΝΑΚΑ ΜΕ ΤΑ EIDH
                 // intent.putExtra("mpel", pel); // ΣΤΕΛΝΩ ΤΟΝ ΠΙΝΑΚΑ ΜΕ ΤΑ ΤΡΑΠΕΖΙΑ
                 MainActivity.this.startActivity(intent);
-
-
-
-
-
-
              //   Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                      //   .setAction("Action", null).show();
             }
         });
+
+
+        final EditText mKOD;
+        mKOD = (EditText) findViewById(R.id.KOD);
+
+        mKOD.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    adding();
+                    // Perform action on key press
+                      Toast.makeText(MainActivity.this, mKOD.getText().toString(), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+
+
+        mKOD.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (s.toString().length()>=4) {
+                    //   adding();
+                    //  Toast.makeText(getApplicationContext(), "editable "+s.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                /*This method is called to notify you that, within s, the count characters beginning at start are about to be replaced by new text with length after. It is an error to attempt to make changes to s from this callback.*/
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+    }
+
+
+
+    public void adding(){
+     //'προσθετει την παρουσια'
+        SQLiteDatabase mydatabase = null;
+        mydatabase = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
+        EditText mKOD, mONO;
+        TextView t;
+        mKOD = (EditText) findViewById(R.id.KOD);
+      //  mONO = (EditText) findViewById(R.id.ONO);
+        t=(TextView)findViewById(R.id.textView);
+        String cmKOD = mKOD.getText().toString();
+    //    String cmONO = mONO.getText().toString();
+
+
+        Cursor cursor = mydatabase.rawQuery("select KOD,ONO from pel where KOD=" + cmKOD + " ", null);
+        int n = 0;
+        String mName="";
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                n = cursor.getInt(0);
+                // n = Integer.parseInt(cursor.getString(0));
+                mName=cursor.getString(1);
+                t.setText(mName);
+            } while (cursor.moveToNext());
+        }
+
+
+
+
+
+
+        mydatabase.execSQL("INSERT INTO parousies (CH2,IDBARDIA,CH1) VALUES('"+mName+"'," + cmKOD + ", datetime('now','localtime') ) ;");
+
+
+        mydatabase.close();
+
+       /* Thread closeActivity = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000);
+                    TextView t;
+
+                    //  mONO = (EditText) findViewById(R.id.ONO);
+                    t=(TextView)findViewById(R.id.textView);
+                    t.setText("...");
+                    // Do some stuff
+                } catch (Exception e) {
+                    e.getLocalizedMessage();
+                }
+            }
+        });
+*/
+
+
+
+
+      //  t.setText("");
+
+        new CountDownTimer(5000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // do something after 1s
+            }
+
+            @Override
+            public void onFinish() {
+                // do something end times 5s
+                TextView t;
+
+                //  mONO = (EditText) findViewById(R.id.ONO);
+                t=(TextView)findViewById(R.id.textView);
+                t.setText("..");
+
+                EditText mKOD;
+                mKOD = (EditText) findViewById(R.id.KOD);
+                mKOD.setText("");
+
+            }
+
+        }.start();
+
+
     }
 
     @Override

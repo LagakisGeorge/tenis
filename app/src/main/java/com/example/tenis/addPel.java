@@ -42,7 +42,7 @@ import java.util.List;
 
 public class addPel extends AppCompatActivity {
 
-
+public  String message="";
 
     public   List<String> values=new ArrayList<>();
 
@@ -566,6 +566,7 @@ public class addPel extends AppCompatActivity {
 
     public void test(View view){
 
+
         File folder = new File(Environment.getExternalStorageDirectory()
                 + "/lagakis2");
 
@@ -600,19 +601,12 @@ public class addPel extends AppCompatActivity {
                     Cursor cursor = db.rawQuery("select IDBARDIA,CH1,CH2  from  parousies  order by CH1 desc", null);  //+ " order by CH1 desc"
 
                     // Cursor cursor = db.selectAll();
-
                     fw.append("ONOMA");
                     fw.append(',');
-
                     fw.append("CODE");
                     fw.append(',');
-
-
                     fw.append("TIME/DATE");
                     fw.append(',');
-
-
-
                     fw.append('\n');
 
                     if (cursor.moveToFirst()) {
@@ -620,38 +614,19 @@ public class addPel extends AppCompatActivity {
                             //NAME
                             fw.append(cursor.getString(2));
                             fw.append(',');
-
                             //ID
                             // fw.append(Float.toString(cursor.getFloat(2)));
-                            fw.append(Float.toString(cursor.getInt(2)));
+                            fw.append(Float.toString(cursor.getInt(0)));
                             fw.append(',');
-
-
                             // DATE
                             fw.append(cursor.getString(1));
                             fw.append(',');
-
-
-
-/*
-
-                            fw.append(cursor.getString(1));
-                            fw.append(',');
-
-
-
-
-
-
-
-
-/*
-
-
-                                fw.append(cursor.getString(10));
-                                fw.append(',');
+                             /*  fw.append(cursor.getString(10));
+                                  fw.append(',');
                              */
                             fw.append('\n');
+
+                            message=message+cursor.getString(2)+","+cursor.getString(0)+","+cursor.getString(1)+"\n";
 
                         } while (cursor.moveToNext());
                     }
@@ -661,13 +636,109 @@ public class addPel extends AppCompatActivity {
 
                     // fw.flush();
                     fw.close();
-
+                    db.close();
                 } catch (Exception e) {
                 }
                 handler.sendEmptyMessage(0);
                 progDailog.dismiss();
             }
         }.start();
+
+
+
+
+
+
+
+
+
+        message="";
+        try {
+
+
+            SQLiteDatabase db = null;
+            db = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
+
+            Cursor cursor = db.rawQuery("select IDBARDIA,CH1,CH2  from  parousies  order by CH1 desc", null);  //+ " order by CH1 desc"
+
+            if (cursor.moveToFirst()) {
+                do {
+                    message=message+cursor.getString(2)+","+cursor.getString(0)+","+cursor.getString(1)+"\n";
+
+                } while (cursor.moveToNext());
+            }
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+            db.close();
+
+        } catch (Exception e) {
+        }
+
+
+
+
+
+
+
+
+
+        //  email----------------------------
+
+        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "glagakis@gmail.com", null));
+        //  intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Test Subject");
+
+        //  context.startActivity(Intent.createChooser(intent, "Send mail..."));
+
+
+
+
+        String to = "glagakis@gmail.com";  // textTo.getText().toString();
+        String subject = "κινησεις" ; //textSubject.getText().toString();
+        //String message = "zzzzvvvvvvv"; // textMessage.getText().toString();
+
+        //   Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("plain/text");
+        File data = null;
+        try {
+            Date dateVal = new Date();
+          //  String filename2 = dateVal.toString();
+            data =File.createTempFile("Report", ".csv");
+            FileWriter out = (FileWriter) GenerateCsv.generateCsvFile(
+                    data, "Name,Data1");
+
+
+
+            File file = new File("/lagakis2/Test.csv");
+            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file)); // data));
+            i.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
+            i.putExtra(Intent.EXTRA_SUBJECT, message);
+            i.putExtra(Intent.EXTRA_TEXT, message);
+            i.setData(Uri.parse("mailto:"));
+
+            // i.setType( "message/rfc822");
+            startActivity(Intent.createChooser(i, "e-mail"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
