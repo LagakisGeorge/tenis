@@ -28,12 +28,12 @@ public class kiniseis extends AppCompatActivity {
     public String message="";
     public CalendarView calendarView;
 
-    //public TextView t3;
+    public TextView t5;
 
     public String apo;
     CalendarView calendar;
     TextView dateView;
-
+    int flag1 = 0;
 
 
     @Override
@@ -43,14 +43,19 @@ public class kiniseis extends AppCompatActivity {
         show_kin();
         calendar = findViewById(R.id.calendarView7);
         dateView = findViewById(R.id.apoHmer);
-       // t5=(TextView)findViewById(R.id.textView5);
+        t5=findViewById(R.id.textView5);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 String Date = dayOfMonth + "-" + (month + 1) + "-" + year;
+                if (flag1==0) {
                     dateView.setText(Date);
-
+                    flag1 = 1;
+                } else{
+                    t5.setText(Date);
+                    calendar.setVisibility(View.INVISIBLE );
+                }
             }
         });
 
@@ -72,25 +77,7 @@ public class kiniseis extends AppCompatActivity {
 
 
 
-    public void hmeromhnia(View view){
-        calendarView=(CalendarView) findViewById(R.id.calendarView);
 
-                TextView t3=(TextView)findViewById(R.id.apoHmer);
-                TextView t5=(TextView)findViewById(R.id.textView5);
-
-                if (t3.length()==0) {
-               //     t3.setText(dayOfMonth + "/" + month + "/" + year);
-                } else{
-                 //   t5.setText(dayOfMonth + "/" + month + "/" + year);
-                    calendarView.setVisibility(View.INVISIBLE  );
-
-                };
-
-
-
-
-
-    }
 
 
     public void send_email(View view){
