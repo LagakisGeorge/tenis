@@ -16,11 +16,13 @@
         tools:layout_editor_absoluteY="11dp" />
 
     <GridView
+        android:id="@+id/grid"
         android:layout_width="match_parent"
-        android:layout_height="362dp"
+        android:layout_height="366dp"
+        android:background="@android:color/holo_green_light"
+        android:numColumns="2"
         tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="375dp"
-        android:id="@+id/grid9"/>
+        tools:layout_editor_absoluteY="375dp" />
 
     <Button
         android:id="@+id/button33"
@@ -64,6 +66,16 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="0dp"
         android:layout_toRightOf="@+id/textView44" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="400dp"
+        android:layout_height="105dp"
+        android:layout_above="@+id/button33"
+        android:layout_alignParentLeft="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
 
 
 </RelativeLayout>
