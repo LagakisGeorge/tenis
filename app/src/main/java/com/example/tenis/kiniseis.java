@@ -1,5 +1,6 @@
 package com.example.tenis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -26,53 +27,49 @@ public class kiniseis extends AppCompatActivity {
 
     public String message="";
     public CalendarView calendarView;
-    public TextView t3;
+
+    //public TextView t3;
+
+    public String apo;
+    CalendarView calendar;
+    TextView dateView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kiniseis);
+        show_kin();
+        calendar = findViewById(R.id.calendarView7);
+        dateView = findViewById(R.id.apoHmer);
+       // t5=(TextView)findViewById(R.id.textView5);
 
-       final CalendarView view = new CalendarView(this);
-        setContentView(view);
-
-        view.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(CalendarView arg0, int year, int month,
-                                            int date) {
-               Toast.makeText(getApplicationContext(),date+ "/"+month+"/"+year,Toast.LENGTH_SHORT ).show();
-
-                 t3=(TextView)findViewById(R.id.apoHmer);
-                // TextView t5=(TextView)findViewById(R.id.textView5);
-               String apo =date+ "/"+month+"/"+year;
-              // t3.setText(apo);
-
-
-/*
-                if (t3.length()==0) {
-                         t3.setText(date + "/" + month + "/" + year);
-                } else{
-                    t5.setText(date + "/" + month + "/" + year);
-                   // view.setVisibility(View.INVISIBLE  );
-
-                };
-             */
-
-
-
-
-
-
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                String Date = dayOfMonth + "-" + (month + 1) + "-" + year;
+                    dateView.setText(Date);
 
             }
         });
 
+    }
 
 
+    public void show_kin(){
+
+
+
+
+        // t5.setText("---");
 
 
     }
+
+
+
+
 
 
     public void hmeromhnia(View view){

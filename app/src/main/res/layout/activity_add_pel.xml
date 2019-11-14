@@ -53,39 +53,39 @@
         android:onClick="ADD_PEL"
         android:text="Save" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/button2"
-
-        android:onClick="toCSV"
-        android:text="tocsv" />
-
     <GridView
         android:id="@+id/grid"
-        android:numColumns="1"
-        android:layout_below="@+id/textView"
-        android:layout_above="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="273dp"
+
+        android:layout_below="@+id/textView"
+
+        android:numColumns="1" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/button3"
 
+        android:layout_alignParentRight="true"
         android:onClick="test"
-        android:text="csv2sd" />
+        android:text="κινησεις σε email" />
 
     <Button
         android:id="@+id/update"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:onClick="update_pel"
         android:text="Διόρθωση" />
+
+    <CalendarView
+        android:layout_below="@+id/grid"
+        android:id="@+id/calendarView"
+        android:layout_width="248dp"
+        android:layout_height="203dp" />
+
 </RelativeLayout>
