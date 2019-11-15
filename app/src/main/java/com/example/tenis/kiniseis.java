@@ -1,10 +1,13 @@
 package com.example.tenis;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,7 +36,7 @@ public class kiniseis extends AppCompatActivity {
 
     public String message="";
     public CalendarView calendarView;
-
+    static Handler handler;
     public TextView t5;
 
     public String apo;
@@ -45,7 +49,11 @@ public class kiniseis extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kiniseis);
-        show_kin();
+       // show_kin();
+        GridView moviesList;
+        moviesList = findViewById(R.id.grid);
+        moviesList.setVisibility(View.INVISIBLE);
+
         calendar = findViewById(R.id.calendarView7);
         dateView = findViewById(R.id.apoHmer);
         t5=findViewById(R.id.textView5);
@@ -79,6 +87,14 @@ public class kiniseis extends AppCompatActivity {
                     d2= year+"-"+ cMonth +"-"+cDay  ;
                     t5.setText(d2);
                     calendar.setVisibility(View.INVISIBLE );
+
+                    GridView moviesList;
+                    moviesList = findViewById(R.id.grid);
+                    moviesList.setVisibility(View.VISIBLE);
+
+
+
+
                     EditText sql;
                     sql=findViewById(R.id.editText);
                     sql.setText("select IDBARDIA, CH1,CH2  from  parousies where CH1>='"+d1+"' AND CH1<='"+d2+"' AND CH2+CH1 NOT NULL order by CH1 desc");
@@ -94,15 +110,6 @@ public class kiniseis extends AppCompatActivity {
     }
 
 
-    public void show_kin(){
-
-
-
-
-        // t5.setText("---");
-
-
-    }
 
 
 
@@ -112,10 +119,10 @@ public class kiniseis extends AppCompatActivity {
 
 
 
-    public void send_email(View view){
+    public void send_email(View view) {
 
 
-       // Intent intent = new Intent(view.getContext(), kiniseis.class);
+        // Intent intent = new Intent(view.getContext(), kiniseis.class);
         // intent.putExtra(EXTRA_MESSAGE, o.toString());
         // String ctrapezi;
         // trapezi = (TextView)findViewById(R.id.textView);
@@ -127,11 +134,7 @@ public class kiniseis extends AppCompatActivity {
         // intent.putExtra("mEIDH", EIDH); // ΣΤΕΛΝΩ ΤΟΝ ΠΙΝΑΚΑ ΜΕ ΤΑ EIDH
         // intent.putExtra("mKATHG", KATHG); // ΣΤΕΛΝΩ ΤΟΝ ΠΙΝΑΚΑ ΜΕ ΤΑ EIDH
         // intent.putExtra("mpel", pel); // ΣΤΕΛΝΩ ΤΟΝ ΠΙΝΑΚΑ ΜΕ ΤΑ ΤΡΑΠΕΖΙΑ
-      //  kiniseis.this.startActivity(intent);
-
-
-
-
+        //  kiniseis.this.startActivity(intent);
 
 
         File folder = new File(Environment.getExternalStorageDirectory()
@@ -140,9 +143,8 @@ public class kiniseis extends AppCompatActivity {
         boolean var = false;
         if (!folder.exists()) {
             var = folder.mkdir();
-        }
-        else{
-            var=true;
+        } else {
+            var = true;
         }
         final String filename = folder.toString() + "/" + "Test.csv";
 
@@ -165,7 +167,7 @@ public class kiniseis extends AppCompatActivity {
                     SQLiteDatabase db = null;
                     db = openOrCreateDatabase("pelates", MODE_PRIVATE, null);
 
-                    Cursor cursor = db.rawQuery("select IDBARDIA,CH1,CH2  from  parousies where CH1>='"+d1+"'  and CH1<='"+d2+"' order by CH1 desc", null);  //+ " order by CH1 desc"
+                    Cursor cursor = db.rawQuery("select IDBARDIA,CH1,CH2  from  parousies where CH1>='" + d1 + "'  and CH1<='" + d2 + "' order by CH1 desc", null);  //+ " order by CH1 desc"
 
                     // Cursor cursor = db.selectAll();
                     fw.append("ONOMA");
@@ -193,7 +195,7 @@ public class kiniseis extends AppCompatActivity {
                              */
                             fw.append('\n');
 
-                            message=message+cursor.getString(2)+","+cursor.getString(0)+","+cursor.getString(1)+"\n";
+                            message = message + cursor.getString(2) + "," + cursor.getString(0) + "," + cursor.getString(1) + "\n";
 
                         } while (cursor.moveToNext());
                     }
@@ -212,27 +214,18 @@ public class kiniseis extends AppCompatActivity {
         }.start();
 
 
-
-
-
-
-
-
-        values=new ArrayList<>();  // μηδενιζω την λιστα
+        values = new ArrayList<>();  // μηδενιζω την λιστα
         values.add("Ονομα");
         values.add("Ημ/νία");
 
 
         EditText sql;
-        sql=findViewById(R.id.editText);
-        String SQL=sql.getText().toString();
+        sql = findViewById(R.id.editText);
+        String SQL = sql.getText().toString();
+        sql.setVisibility(View.INVISIBLE);
 
 
-
-
-
-
-        message="";
+        message = "";
         try {
 
 
@@ -244,7 +237,7 @@ public class kiniseis extends AppCompatActivity {
 
             if (cursor.moveToFirst()) {
                 do {
-                    message=message+cursor.getString(2)+","+cursor.getString(0)+","+cursor.getString(1)+"\n";
+                    message = message + cursor.getString(2) + "," + cursor.getString(0) + "," + cursor.getString(1) + "\n";
                     values.add(cursor.getString(2));
                     values.add(cursor.getString(1));
                 } while (cursor.moveToNext());
@@ -258,16 +251,67 @@ public class kiniseis extends AppCompatActivity {
         }
 
         ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<String>(kiniseis.this,android.R.layout.simple_list_item_1, values);
+                new ArrayAdapter<String>(kiniseis.this, android.R.layout.simple_list_item_1, values);
 
         GridView moviesList;
-        moviesList=findViewById(R.id.grid);
+        moviesList = findViewById(R.id.grid);
         moviesList.setAdapter(arrayAdapter);
 
 
+        Boolean fl=getYesNoWithExecutionStop("email", "Να σταλεί;", kiniseis.this);
+        if (fl) {
+            send_mail(  message);
+        }
+    }
 
-/*
 
+
+
+    private boolean mResult;
+    public boolean getYesNoWithExecutionStop(String title, String message, Context context) {
+        // make a handler that throws a runtime exception when a message is received
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message mesg) {
+                throw new RuntimeException();
+            }
+        };
+
+        // make a text input dialog and show it
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mResult = true;
+                handler.sendMessage(handler.obtainMessage());
+            }
+        });
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mResult = false;
+                handler.sendMessage(handler.obtainMessage());
+            }
+        });
+        alert.show();
+
+        // loop till a runtime exception is triggered.
+        try { Looper.loop(); }
+        catch(RuntimeException e2) {}
+
+        return mResult;
+    }
+
+
+
+
+
+
+
+
+
+
+     public void send_mail( String message){
 
 
         //  email----------------------------
@@ -309,13 +353,6 @@ public class kiniseis extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
- */
     }
 
 
